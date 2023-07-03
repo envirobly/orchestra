@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+# Prerequisite:
+# docker buildx create --use
+
+docker buildx build \
+  -t public.ecr.aws/n3n8h9q4/siliconsail/orchestra:latest \
+  -f Dockerfile \
+  --push \
+  --platform "linux/arm64,linux/amd64" \
+  .
+

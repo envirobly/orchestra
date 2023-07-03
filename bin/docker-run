@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+mkdir -p /tmp/orchestra
+
+docker run --name orchestra \
+	-v /var/run/docker.sock:/var/run/docker.sock \
+	-v /tmp/orchestra:/tmp/orchestra \
+	--rm \
+	--add-host host.docker.internal:host-gateway \
+	siliconsail/orchestra \
+	orchestra $@
