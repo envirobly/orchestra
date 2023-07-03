@@ -8,6 +8,9 @@ RUN apk add --no-cache --update \
     docker-cli-compose \
     docker-credential-ecr-login
 
+RUN gem update --system --no-document \
+    && gem install bundler
+
 WORKDIR /orchestra
 
 # Copy the Gemfile, Gemfile.lock into the container
@@ -17,9 +20,7 @@ COPY Gemfile Gemfile.lock orchestra.gemspec ./
 COPY lib/orchestra/version.rb /orchestra/lib/orchestra/version.rb
 
 # Install gems
-RUN gem update --system --no-document \
-    && gem install bundler \
-    && bundle install
+RUN bundle install
 
 # Copy the rest of our application code into the container.
 # We do this after bundle install, to avoid having to run bundle
