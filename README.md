@@ -32,3 +32,13 @@ ruby -Ilib bin/orchestra services down
 # or:
 bin/docker-run  services down
 ```
+
+### Traefik dynamic config
+
+Testing locally:
+
+```sh
+mkdir -p /tmp/orchestra/etc/traefik
+
+ruby -Ilib bin/orchestra traefik fetch_dynamic_config_files --url https://example.com/123 --authorization "Bearer 123" --config-dir /tmp/orchestra/etc/traefik
+```

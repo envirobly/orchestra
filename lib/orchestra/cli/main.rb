@@ -19,4 +19,7 @@ class Orchestra::Cli::Main < Thor
 
   desc "services", "Manage services"
   subcommand "services", Orchestra::Cli::Services
+
+  desc "traefik", "Manage traefik"
+  subcommand "traefik", Orchestra::Cli::Traefik
 end
