@@ -12,7 +12,13 @@ class Orchestra::Cli::Services < Thor
     puts output
 
     if status.to_i > 0
-      # TODO: Parse output for service uuids
+      # TODO: Report failure
+    else
+      output, status = Open3.capture2e *compose_ps_cmd
+
+      puts output
+
+      # TODO: Report output
     end
   end
 
@@ -63,6 +69,15 @@ class Orchestra::Cli::Services < Thor
         "--progress=plain",
         "-f", service_definition_path,
         "down"
+      ]
+    end
+
+    def compose_ps_cmd
+      [
+        "docker", "compose",
+        "-f", service_definition_path,
+        "ps",
+        "--format=json"
       ]
     end
 end
