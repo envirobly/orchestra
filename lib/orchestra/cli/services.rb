@@ -18,7 +18,10 @@ class Orchestra::Cli::Services < Thor
 
   desc "down", "Stop services previously launched by up"
   def down
-    puts `docker compose -f #{service_definition_path} down`
+    output, status = Open3.capture2e *compose_down_cmd
+
+    puts output
+
     FileUtils.rm service_definition_path
   end
 
@@ -51,6 +54,15 @@ class Orchestra::Cli::Services < Thor
         "up",
         "--detach",
         "--wait"
+      ]
+    end
+
+    def compose_down_cmd
+      [
+        "docker", "compose",
+        "--progress=plain",
+        "-f", service_definition_path,
+        "down"
       ]
     end
 end
