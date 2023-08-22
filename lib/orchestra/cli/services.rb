@@ -59,7 +59,6 @@ class Orchestra::Cli::Services < Thor
     def compose_up_cmd
       [
         "docker", "compose",
-        "--progress=plain",
         "-f", service_definition_path,
         "up",
         "--detach",
@@ -70,7 +69,6 @@ class Orchestra::Cli::Services < Thor
     def compose_down_cmd
       [
         "docker", "compose",
-        "--progress=plain",
         "-f", service_definition_path,
         "down"
       ]
