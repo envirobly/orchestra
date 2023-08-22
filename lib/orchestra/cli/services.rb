@@ -3,7 +3,7 @@ require "open3"
 
 class Orchestra::Cli::Services < Thor
   desc "up", "Start services from provided URL authenticating with a HTTP bearer token"
-  method_options url: :string, authorization: :string
+  method_options url: :string, authorization: :string, event_url: :string
   def up
     fetch_service_definition_file
 
@@ -14,11 +14,15 @@ class Orchestra::Cli::Services < Thor
     if status.to_i > 0
       # TODO: Report failure
     else
-      output, status = Open3.capture2e *compose_ps_cmd
+      containers, status = Open3.capture2e *compose_ps_cmd
 
-      puts output
+      headers = authorization_headers.merge({ "Content-Type" => "application/json" })
+      body = JSON.generate({
+        event: "services_up",
+        services: JSON.parse(containers)
+      })
 
-      # TODO: Report output
+      HTTParty.post(options.event_url, body:, headers:)
     end
   end
 
