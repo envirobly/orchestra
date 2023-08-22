@@ -1,12 +1,19 @@
 require "httparty"
+require "open3"
 
 class Orchestra::Cli::Services < Thor
   desc "up", "Start services from provided URL authenticating with a HTTP bearer token"
-  method_options url: :string, token: :string
+  method_options url: :string, authorization: :string
   def up
     fetch_service_definition_file
 
-    puts `docker compose -f #{service_definition_path} up --detach`
+    output, status = Open3.capture2e *compose_up_cmd
+
+    puts output
+
+    if status.to_i > 0
+      # TODO: Parse output for service uuids
+    end
   end
 
   desc "down", "Stop services previously launched by up"
@@ -17,7 +24,7 @@ class Orchestra::Cli::Services < Thor
 
   private
     def authorization_headers
-      { "Authorization" => options.token }
+      { "Authorization" => options.authorization }
     end
 
     def fetch_service_definition_file
@@ -33,5 +40,17 @@ class Orchestra::Cli::Services < Thor
 
     def service_definition_path
       Orchestra::Cli::SERVICE_DEFINITION_PATH
+    end
+
+    # https://docs.docker.com/engine/reference/commandline/compose_up/
+    def compose_up_cmd
+      [
+        "docker", "compose",
+        "--progress=plain",
+        "-f", service_definition_path,
+        "up",
+        "--detach",
+        "--wait"
+      ]
     end
 end
