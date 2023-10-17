@@ -1,5 +1,6 @@
 require "httparty"
 require "open3"
+require "httpx"
 
 class Orchestra::Cli::Services < Thor
   desc "up", "Start services from provided URL authenticating with a HTTP bearer token"
@@ -14,14 +15,14 @@ class Orchestra::Cli::Services < Thor
     if status.to_i > 0
       # TODO: Report failure
     else
-      containers, status = Open3.capture2e *compose_ps_cmd
+      http = HTTPX.with(transport: "unix", addresses: ["/var/run/docker.sock"])
 
-      # require "debug"; debugger
+      response = http.get("http://localhost/v1.43/containers/json")
 
       headers = authorization_headers.merge({ "Content-Type" => "application/json" })
       body = JSON.generate({
         event: "services_up",
-        services: JSON.parse(containers)
+        services: JSON.parse(response.body)
       })
 
       HTTParty.post(options.event_url, body:, headers:)
