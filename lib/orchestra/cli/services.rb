@@ -16,6 +16,8 @@ class Orchestra::Cli::Services < Thor
     else
       containers, status = Open3.capture2e *compose_ps_cmd
 
+      # require "debug"; debugger
+
       headers = authorization_headers.merge({ "Content-Type" => "application/json" })
       body = JSON.generate({
         event: "services_up",
@@ -61,6 +63,7 @@ class Orchestra::Cli::Services < Thor
         "docker", "compose",
         "-f", service_definition_path,
         "up",
+        "--remove-orphans", # TODO: Replace with zero downtime deploy
         "--detach",
         "--wait"
       ]

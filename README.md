@@ -25,7 +25,7 @@ ruby -Ilib bin/orchestra version
 ruby -Ilib bin/orchestra services up --url http://localhost:1337/compose.yml --authorization MySecret --event-url http://localhost:1337
 
 # or using docker:
-bin/docker-run services up --url http://host.docker.internal:1337/compose.yml --authorization MySecret --event-url http://localhost:1337
+bin/docker-run services up --url http://host.docker.internal:1337/compose.yml --authorization MySecret --event-url http://host.docker.internal:1337
 
 # then stop those services:
 ruby -Ilib bin/orchestra services down
