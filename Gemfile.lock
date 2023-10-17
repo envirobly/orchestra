@@ -3,6 +3,7 @@ PATH
   specs:
     orchestra (0.0.1)
       httparty
+      httpx
       thor
       zeitwerk
 
@@ -12,9 +13,12 @@ GEM
     debug (1.8.0)
       irb (>= 1.5.0)
       reline (>= 0.3.1)
+    http-2-next (1.0.1)
     httparty (0.21.0)
       mini_mime (>= 1.0.0)
       multi_xml (>= 0.5.2)
+    httpx (1.0.2)
+      http-2-next (>= 1.0.1)
     io-console (0.6.0)
     irb (1.7.1)
       reline (>= 0.3.0)

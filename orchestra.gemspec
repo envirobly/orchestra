@@ -15,7 +15,8 @@ Gem::Specification.new do |spec|
   # spec.add_dependency "activesupport", ">= 7.0"
   spec.add_dependency "thor"
   spec.add_dependency "zeitwerk"
-  spec.add_dependency "httparty"
+  spec.add_dependency "httparty" # @deprecated Replace with httpx completely
+  spec.add_dependency "httpx"
 
   spec.add_development_dependency "debug"
   # spec.add_development_dependency "railties"
