@@ -77,13 +77,4 @@ class Orchestra::Cli::Services < Thor
         "down"
       ]
     end
-
-    def compose_ps_cmd
-      [
-        "docker", "compose",
-        "-f", service_definition_path,
-        "ps",
-        "--format=json"
-      ]
-    end
 end
