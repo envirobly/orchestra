@@ -28,6 +28,18 @@ ruby -Ilib bin/orchestra services up --config-dir tmp/envirobly-etc --config-buc
 ruby -Ilib bin/orchestra services down --config-dir tmp/envirobly-etc
 ```
 
+### under docker
+
+```sh
+bin/docker-run version
+
+# Starting sample services when bin/dev is running:
+bin/docker-run services up --config-dir /etc/envirobly --config-bucket orchestra-development --event-url http://host.docker.internal:1337 --authorization ABCD
+
+bin/docker-run services down --config-dir /etc/envirobly
+```
+
+
 ### Traefik dynamic config
 
 Testing locally:

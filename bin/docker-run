@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 
-mkdir -p /tmp/orchestra
-
 docker run --name orchestra \
 	-v /var/run/docker.sock:/var/run/docker.sock \
-	-v /tmp/orchestra:/tmp/orchestra \
-	--rm \
+	-v ./tmp/envirobly-etc:/etc/envirobly \
+	-v $HOME/.aws:/root/.aws \
 	--add-host host.docker.internal:host-gateway \
-	siliconsail/orchestra \
+	--rm \
+	public.ecr.aws/n3n8h9q4/siliconsail/orchestra:latest \
 	orchestra $@

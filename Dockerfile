@@ -21,6 +21,7 @@ COPY Gemfile Gemfile.lock orchestra.gemspec ./
 COPY lib/orchestra/version.rb /orchestra/lib/orchestra/version.rb
 
 # Install gems
+RUN bundle config set --local without development
 RUN bundle install
 
 # Copy the rest of our application code into the container.

@@ -3,10 +3,11 @@
 # Prerequisite:
 # docker buildx create --use
 
+aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/n3n8h9q4
+
 docker buildx build \
   -t public.ecr.aws/n3n8h9q4/siliconsail/orchestra:latest \
   -f Dockerfile \
   --push \
   --platform "linux/arm64,linux/amd64" \
   .
-
