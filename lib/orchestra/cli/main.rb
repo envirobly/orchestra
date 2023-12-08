@@ -17,7 +17,4 @@ class Orchestra::Cli::Main < Orchestra::Base
 
   desc "services", "Manage services"
   subcommand "services", Orchestra::Cli::Services
-
-  desc "traefik", "Manage traefik"
-  subcommand "traefik", Orchestra::Cli::Traefik
 end
