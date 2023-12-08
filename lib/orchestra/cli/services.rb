@@ -10,7 +10,14 @@ class Orchestra::Cli::Services < Orchestra::Base
   method_option :event_url,     type: :string, required: true
   method_option :authorization, type: :string, required: true
   def up
-    # fetch_service_definition_file
+    output, status = Open3.capture2e *sync_config_files_cmd
+
+    puts output
+
+    if status.to_i > 0
+      # AWS access denied error code is 256, which is not a valid unix error code
+      exit 1
+    end
 
     output, status = Open3.capture2e *compose_up_cmd
 
@@ -79,5 +86,15 @@ class Orchestra::Cli::Services < Orchestra::Base
 
     def compose_file_path
       Pathname.new(options.config_dir).join("compose.yml").to_s
+    end
+
+    def sync_config_files_cmd
+      [
+        "aws", "s3",
+        "sync",
+        "s3://#{options.config_bucket}",
+        options.config_dir,
+        "--delete"
+      ]
     end
 end
