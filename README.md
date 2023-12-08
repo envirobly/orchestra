@@ -22,10 +22,10 @@ Edit `~/.docker/config` to contain:
 ruby -Ilib bin/orchestra version
 
 # Starting sample services when bin/dev is running:
-ruby -Ilib bin/orchestra services up --compose public/compose.yml --config-bucket envirobly-config-93d409cc --event-url http://localhost:1337 --authorization ABCD
+ruby -Ilib bin/orchestra services up --config-dir tmp/envirobly-etc --config-bucket envirobly-config-93d409cc --event-url http://localhost:1337 --authorization ABCD
 
 # then stop those services:
-ruby -Ilib bin/orchestra services down --compose public/compose.yml
+ruby -Ilib bin/orchestra services down --config-dir tmp/envirobly-etc
 ```
 
 ### Traefik dynamic config

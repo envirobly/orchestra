@@ -1,10 +1,11 @@
 require "httparty" # @deprecated
 require "open3"
 require "httpx"
+require "pathname"
 
 class Orchestra::Cli::Services < Orchestra::Base
   desc "up", "Start services from provided compose file and report containers afterwards"
-  method_option :compose,       type: :string, required: true
+  method_option :config_dir,    type: :string, required: true
   method_option :config_bucket, type: :string, required: true
   method_option :event_url,     type: :string, required: true
   method_option :authorization, type: :string, required: true
@@ -23,7 +24,7 @@ class Orchestra::Cli::Services < Orchestra::Base
   end
 
   desc "down", "Stop services defined in supplied compose file"
-  method_option :compose, type: :string, required: true
+  method_option :config_dir, type: :string, required: true
   def down
     output, status = Open3.capture2e *compose_down_cmd
 
@@ -60,7 +61,7 @@ class Orchestra::Cli::Services < Orchestra::Base
     def compose_up_cmd
       [
         "docker", "compose",
-        "-f", options.compose,
+        "-f", compose_file_path,
         "up",
         "--remove-orphans",
         "--detach",
@@ -71,8 +72,12 @@ class Orchestra::Cli::Services < Orchestra::Base
     def compose_down_cmd
       [
         "docker", "compose",
-        "-f", options.compose,
+        "-f", compose_file_path,
         "down"
       ]
+    end
+
+    def compose_file_path
+      Pathname.new(options.config_dir).join("compose.yml").to_s
     end
 end
