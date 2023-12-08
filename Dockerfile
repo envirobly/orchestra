@@ -10,7 +10,8 @@ RUN apk add --no-cache --update \
     aws-cli
 
 RUN gem update --system --no-document \
-    && gem install bundler
+    && gem install bundler \
+    && bundle config set --local without development
 
 WORKDIR /orchestra
 
@@ -21,7 +22,6 @@ COPY Gemfile Gemfile.lock orchestra.gemspec ./
 COPY lib/orchestra/version.rb /orchestra/lib/orchestra/version.rb
 
 # Install gems
-RUN bundle config set --local without development
 RUN bundle install
 
 # Copy the rest of our application code into the container.
