@@ -1,70 +1,68 @@
-require "httparty"
+require "httparty" # @deprecated
 require "open3"
 require "httpx"
 
-class Orchestra::Cli::Services < Thor
-  desc "up", "Start services from provided URL authenticating with a HTTP bearer token"
-  method_options url: :string, authorization: :string, event_url: :string
+class Orchestra::Cli::Services < Orchestra::Base
+  desc "up", "Start services from provided compose file and report containers afterwards"
+  method_option :compose,       type: :string, required: true
+  method_option :config_bucket, type: :string, required: true
+  method_option :event_url,     type: :string, required: true
+  method_option :authorization, type: :string, required: true
   def up
-    fetch_service_definition_file
+    # fetch_service_definition_file
 
     output, status = Open3.capture2e *compose_up_cmd
 
     puts output
 
     if status.to_i > 0
-      # TODO: Report failure
+      exit status.to_i
     else
-      http = HTTPX.with(transport: "unix", addresses: ["/var/run/docker.sock"])
-
-      response = http.get("http://localhost/v1.43/containers/json")
-
-      headers = authorization_headers.merge({ "Content-Type" => "application/json" })
-      body = JSON.generate({
-        event: "services_up",
-        services: JSON.parse(response.body)
-      })
-
-      HTTParty.post(options.event_url, body:, headers:)
+      post_services_up_event
     end
   end
 
-  desc "down", "Stop services previously launched by up"
+  desc "down", "Stop services defined in supplied compose file"
+  method_option :compose, type: :string, required: true
   def down
     output, status = Open3.capture2e *compose_down_cmd
 
     puts output
 
-    FileUtils.rm service_definition_path
+    exit status.to_i
   end
 
   private
+    def list_containers
+      http = HTTPX.with(transport: "unix", addresses: ["/var/run/docker.sock"])
+
+      response = http.get("http://localhost/v1.43/containers/json")
+
+      response.body
+    end
+
+    def post_services_up_event
+      headers = authorization_headers.merge({ "Content-Type" => "application/json" })
+
+      body = JSON.generate({
+        event: "services_up",
+        services: JSON.parse(list_containers)
+      })
+
+      HTTParty.post(options.event_url, body:, headers:)
+    end
+
     def authorization_headers
       { "Authorization" => options.authorization }
-    end
-
-    def fetch_service_definition_file
-      response = HTTParty.get options.url, headers: authorization_headers
-      # content = JSON.pretty_generate(JSON.parse(response.body))
-
-      if File.write(service_definition_path, response.body)
-        puts "Service definition file saved to #{service_definition_path}"
-      else
-        raise StandardError, "Unable to save service definition file into #{service_definition_path}"
-      end
-    end
-
-    def service_definition_path
-      Orchestra::Cli::SERVICE_DEFINITION_PATH
     end
 
     # https://docs.docker.com/engine/reference/commandline/compose_up/
     def compose_up_cmd
       [
         "docker", "compose",
-        "-f", service_definition_path,
+        "-f", options.compose,
         "up",
-        "--remove-orphans", # TODO: Replace with zero downtime deploy
+        "--remove-orphans",
         "--detach",
         "--wait"
       ]
@@ -73,7 +71,7 @@ class Orchestra::Cli::Services < Thor
     def compose_down_cmd
       [
         "docker", "compose",
-        "-f", service_definition_path,
+        "-f", options.compose,
         "down"
       ]
     end

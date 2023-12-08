@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    orchestra (0.0.1)
+    orchestra (0.1.0)
       activesupport (~> 7.0)
       aws-sdk-s3 (~> 1.141)
       httparty (~> 0.21)

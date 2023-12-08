@@ -1,6 +1,6 @@
 require "httparty"
 
-class Orchestra::Cli::Traefik < Thor
+class Orchestra::Cli::Traefik < Orchestra::Base
   desc "fetch_dynamic_config_files", 
        "Fetch Traefik dynamic config files from provided URL authenticating with a HTTP bearer token"
   method_options url: :string, authorization: :string, config_dir: "/etc/traefik"

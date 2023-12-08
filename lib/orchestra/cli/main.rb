@@ -1,6 +1,4 @@
-require "thor"
-
-class Orchestra::Cli::Main < Thor
+class Orchestra::Cli::Main < Orchestra::Base
   desc "version", "Show Orchestra version"
   def version
     puts Orchestra::VERSION
