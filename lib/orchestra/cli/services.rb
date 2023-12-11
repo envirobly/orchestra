@@ -91,10 +91,9 @@ class Orchestra::Cli::Services < Orchestra::Base
     def sync_config_files_cmd
       [
         "aws", "s3",
-        "sync",
+        "cp", "--recursive",
         "s3://#{options.config_bucket}",
-        options.config_dir,
-        "--delete"
+        options.config_dir
       ]
     end
 end
