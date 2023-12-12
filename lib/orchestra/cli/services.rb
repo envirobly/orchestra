@@ -13,34 +13,38 @@ class Orchestra::Cli::Services < Orchestra::Base
   method_option :event_url,     type: :string, required: true
   method_option :authorization, type: :string, required: true
   def up
-    output, status = Open3.capture2e *sync_config_files_cmd
+    with_lock do
+      output, status = Open3.capture2e *sync_config_files_cmd
 
-    puts output
+      puts output
 
-    if status.to_i > 0
-      # AWS access denied error code is 256, which is not a valid unix error code
-      exit 1
-    end
+      if status.to_i > 0
+        # AWS access denied error code is 256, which is not a valid unix error code
+        exit 1
+      end
 
-    output, status = Open3.capture2e *compose_up_cmd
+      output, status = Open3.capture2e *compose_up_cmd
 
-    puts output
+      puts output
 
-    if status.to_i > 0
-      exit status.to_i
-    else
-      post_services_up_event
+      if status.to_i > 0
+        exit status.to_i
+      else
+        post_services_up_event
+      end
     end
   end
 
   desc "down", "Stop services defined in supplied compose file"
   method_option :config_dir, type: :string, required: true
   def down
-    output, status = Open3.capture2e *compose_down_cmd
+    with_lock do
+      output, status = Open3.capture2e *compose_down_cmd
 
-    puts output
+      puts output
 
-    exit status.to_i
+      exit status.to_i
+    end
   end
 
   desc "lock", "Test locking"
