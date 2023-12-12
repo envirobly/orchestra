@@ -39,13 +39,9 @@ bin/docker-run services up --config-dir /etc/envirobly --config-bucket orchestra
 bin/docker-run services down --config-dir /etc/envirobly
 ```
 
-
-### Traefik dynamic config
-
-Testing locally:
+## Lock testing
 
 ```sh
-mkdir -p /tmp/orchestra/etc/traefik
-
-ruby -Ilib bin/orchestra traefik fetch_dynamic_config_files --url https://example.com/123 --authorization "Bearer 123" --config-dir /tmp/orchestra/etc/traefik
+ruby -Ilib bin/orchestra services lock --config-dir tmp/envirobly-etc
+ruby -Ilib bin/orchestra services lock --config-dir tmp/envirobly-etc
 ```

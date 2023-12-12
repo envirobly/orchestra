@@ -4,6 +4,9 @@ require "httpx"
 require "pathname"
 
 class Orchestra::Cli::Services < Orchestra::Base
+  LOCKFILE_PARENT_DIR = "orchestra"
+  LOCK_RETRY_INTERVAL = 2
+
   desc "up", "Start services from provided compose file and report containers afterwards"
   method_option :config_dir,    type: :string, required: true
   method_option :config_bucket, type: :string, required: true
@@ -40,7 +43,45 @@ class Orchestra::Cli::Services < Orchestra::Base
     exit status.to_i
   end
 
+  desc "lock", "Test locking"
+  method_option :config_dir, type: :string, required: true
+  def lock
+    with_lock do
+      puts "Executing something with lock for 30 seconds"
+      sleep 30
+      puts "Done"
+    end
+  end
+
   private
+    def with_lock
+      FileUtils.mkdir_p lockfile_dir
+      locked = false
+
+      File.open(lockfile_path, File::CREAT | File::EXCL | File::WRONLY) do
+        locked = true
+        yield
+      end
+    rescue Errno::EEXIST
+      puts "Locked, retrying in #{LOCK_RETRY_INTERVAL}s"
+      sleep LOCK_RETRY_INTERVAL
+      puts "retrying..."
+      retry
+    ensure
+      if locked
+        puts "Deleting lock"
+        File.delete(lockfile_path)
+      end
+    end
+
+    def lockfile_dir
+      Pathname.new(options.config_dir).join LOCKFILE_PARENT_DIR
+    end
+
+    def lockfile_path
+      lockfile_dir.join "orchestra.lock"
+    end
+
     def list_containers
       http = HTTPX.with(transport: "unix", addresses: ["/var/run/docker.sock"])
 
