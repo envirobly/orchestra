@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+# Sample docker events processor
+# Usage: `docker events --format '{{json .}}' | bin/process-docker-event`
+
+while read line; do
+    echo "[PROCESSED] $line"
+done
