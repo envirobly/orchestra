@@ -67,14 +67,13 @@ class Orchestra::Cli::Services < Orchestra::Base
         yield
       end
     rescue Errno::EEXIST
-      puts "Locked, retrying in #{LOCK_RETRY_INTERVAL}s"
+      puts "[Orchestra] Execution lock in place, retrying in #{LOCK_RETRY_INTERVAL}s"
       sleep LOCK_RETRY_INTERVAL
-      puts "retrying..."
       retry
     ensure
       if locked
-        puts "Deleting lock"
-        File.delete(lockfile_path)
+        puts "[Orchestra] Deleting lock"
+        File.delete lockfile_path
       end
     end
 
