@@ -45,3 +45,20 @@ bin/docker-run services down --config-dir /etc/envirobly
 ruby -Ilib bin/orchestra services lock --config-dir tmp/envirobly-etc
 ruby -Ilib bin/orchestra services lock --config-dir tmp/envirobly-etc
 ```
+
+# Builds
+
+```sh
+docker run --name orchestra \
+	-v /var/run/docker.sock:/var/run/docker.sock \
+	-v $HOME/envirobly/benchpress:/app \
+	-v $HOME/.aws:/root/.aws \
+	-it \
+	--rm \
+	envirobly/orchestra \
+	sh
+
+cd /app
+
+
+```

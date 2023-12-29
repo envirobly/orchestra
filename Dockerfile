@@ -5,6 +5,7 @@ FROM public.ecr.aws/docker/library/ruby:$RUBY_VERSION-alpine
 RUN apk add --no-cache --update \
     build-base \
     docker-cli \
+    docker-cli-buildx \
     docker-cli-compose \
     docker-credential-ecr-login \
     aws-cli
