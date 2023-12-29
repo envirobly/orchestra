@@ -48,6 +48,8 @@ ruby -Ilib bin/orchestra services lock --config-dir tmp/envirobly-etc
 
 # Builds
 
+Proof of concept building inside the container:
+
 ```sh
 docker run --name orchestra \
 	-v /var/run/docker.sock:/var/run/docker.sock \
@@ -59,6 +61,6 @@ docker run --name orchestra \
 	sh
 
 cd /app
-
-
+export DOCKER_BUILDKIT=1
+docker build . -f Dockerfile -t benchpress:latest
 ```
