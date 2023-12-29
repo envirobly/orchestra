@@ -6,5 +6,5 @@ docker run --name orchestra \
 	-v $HOME/.aws:/root/.aws \
 	--add-host host.docker.internal:host-gateway \
 	--rm \
-	public.ecr.aws/n3n8h9q4/siliconsail/orchestra:latest \
+	envirobly/orchestra \
 	orchestra $@
