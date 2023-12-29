@@ -8,7 +8,8 @@ RUN apk add --no-cache --update \
     docker-cli-buildx \
     docker-cli-compose \
     docker-credential-ecr-login \
-    aws-cli
+    aws-cli \
+    git
 
 RUN gem update --system --no-document \
     && gem install bundler \
