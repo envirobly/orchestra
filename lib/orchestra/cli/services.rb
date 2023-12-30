@@ -10,6 +10,7 @@ class Orchestra::Cli::Services < Orchestra::Base
   desc "up", "Start services from provided compose file and report containers afterwards"
   method_option :config_dir,    type: :string, required: true
   method_option :config_bucket, type: :string, required: true
+  method_option :config_region, type: :string, required: true
   method_option :event_url,     type: :string, required: true
   method_option :authorization, type: :string, required: true
   def up
@@ -136,6 +137,7 @@ class Orchestra::Cli::Services < Orchestra::Base
       [
         "aws", "s3",
         "cp", "--recursive",
+        "--region", options.config_region,
         "s3://#{options.config_bucket}",
         options.config_dir
       ]
