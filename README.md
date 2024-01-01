@@ -26,9 +26,6 @@ ruby -Ilib bin/orchestra services up --config-dir tmp/envirobly-etc --config-buc
 
 # then stop those services:
 ruby -Ilib bin/orchestra services down --config-dir tmp/envirobly-etc
-
-# Building and pushing and image
-ruby -Ilib bin/orchestra images build --git-url https://git-codecommit.eu-north-1.amazonaws.com/v1/repos/envirobly-fbcd116e22 --commit-id c3f5d057ab10794efa2544620fa5c2500e2a13e6 --cache-bucket envirobly-build-cache-fbcd116e22 --cache-region eu-north-1 --image-uri 406367475671.dkr.ecr.eu-north-1.amazonaws.com/envirobly-fbcd116e22:c48387cb7af279f764ee3b8b410760fb4db712a8e746826e225456fe31d05327 --dockerfile Dockerfile --build-context .
 ```
 
 ### under docker
