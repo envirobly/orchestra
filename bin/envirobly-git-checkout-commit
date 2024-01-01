@@ -1,5 +1,8 @@
 #!/usr/bin/env sh
 
+docker buildx create --name=multiarch --node=multiarch --driver=docker-container
+docker buildx use multiarch --global
+
 mkdir -p $1
 cd $1
 git init

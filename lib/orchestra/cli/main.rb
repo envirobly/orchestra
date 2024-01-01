@@ -9,12 +9,9 @@ class Orchestra::Cli::Main < Orchestra::Base
     puts `docker -v`
   end
 
-  # @deprecated
-  desc "list", "List running containers in JSON format"
-  def list
-    puts `docker ps --format '{{json .}}'`
-  end
-
   desc "services", "Manage services"
   subcommand "services", Orchestra::Cli::Services
+
+  desc "images", "Docker images"
+  subcommand "images", Orchestra::Cli::Images
 end

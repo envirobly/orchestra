@@ -50,7 +50,11 @@ RUN apk add --no-cache --update \
     aws-cli \
     git
 
-# Copy built artifacts: gems
+RUN git config --global credential.helper '!aws codecommit credential-helper $@' && \
+    git config --global credential.UseHttpPath true
+
+# Copy built artifacts
 COPY --link --from=build /usr/local/bundle /usr/local/bundle
+COPY --link --from=build /orchestra-build/bin/envirobly-git-checkout-commit /usr/bin/envirobly-git-checkout-commit
 
 CMD ["orchestra"]
