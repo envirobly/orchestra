@@ -44,7 +44,6 @@ bin/docker-run services down --config-dir /etc/envirobly
 # Building and pushing and image
 docker run --name orchestra \
 	-v /var/run/docker.sock:/var/run/docker.sock \
-	-v $PWD/.docker/config.json:/root/.docker/config.json \
 	-v $HOME/.aws:/root/.aws \
 	--rm \
 	-e AWS_PROFILE=client1 \

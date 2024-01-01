@@ -56,5 +56,6 @@ RUN git config --global credential.helper '!aws codecommit credential-helper $@'
 # Copy built artifacts
 COPY --link --from=build /usr/local/bundle /usr/local/bundle
 COPY --link --from=build /orchestra-build/bin/envirobly-git-checkout-commit /usr/bin/envirobly-git-checkout-commit
+COPY --link --from=build /orchestra-build/.docker/config.json /root/.docker/config.json
 
 CMD ["orchestra"]
