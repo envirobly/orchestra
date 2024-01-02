@@ -25,8 +25,8 @@ class Orchestra::Cli::Images < Orchestra::Base
       [
         "docker", "buildx", "build",
         "--progress=plain",
-        "--cache-from=type=s3,region=#{options.cache_region},bucket=#{options.cache_bucket},name=app",
-        "--cache-to=type=s3,region=#{options.cache_region},bucket=#{options.cache_bucket},name=app,mode=max",
+        "--cache-from=type=registry,ref=#{cache_registry_uri}",
+        "--cache-to=type=registry,ref=#{cache_registry_uri},mode=max",
         "-t", options.image_uri, "--push",
         "-f", dockerfile_path.to_s,
         build_context.to_s
@@ -43,5 +43,9 @@ class Orchestra::Cli::Images < Orchestra::Base
 
     def dockerfile_path
       git_checkout_path.join options.dockerfile
+    end
+
+    def cache_registry_uri
+      options.image_uri.split(":").first
     end
 end
