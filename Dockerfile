@@ -51,7 +51,9 @@ RUN apk add --no-cache --update \
     git
 
 RUN git config --global credential.helper '!aws codecommit credential-helper $@' && \
-    git config --global credential.UseHttpPath true
+    git config --global credential.UseHttpPath true && \
+    git config --global advice.detachedHead false && \
+    git config --global init.defaultBranch main
 
 # Copy built artifacts
 COPY --link --from=build /usr/local/bundle /usr/local/bundle

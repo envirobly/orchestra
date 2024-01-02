@@ -1,5 +1,6 @@
 require "open3"
 require "pathname"
+require "benchmark"
 
 class Orchestra::Cli::Images < Orchestra::Base
   desc "build", "Build and push a Docker image"
@@ -11,9 +12,20 @@ class Orchestra::Cli::Images < Orchestra::Base
   method_option :dockerfile,      type: :string, required: true
   method_option :build_context,   type: :string, required: true
   def build
-    output, status = Open3.capture2e "envirobly-git-checkout-commit", git_checkout_path.to_s, options.git_url, options.commit_id
+    status = 1
+    # Disable output buffering, otherwise exec prevents some of the puts to be visible
+    $stdout.sync = true
 
-    puts output
+    puts "Checking out commit #{options.commit_id}..."
+
+    checkout_time = Benchmark.realtime do
+      output, status =
+        Open3.capture2e "envirobly-git-checkout-commit", git_checkout_path.to_s, options.git_url, options.commit_id
+
+      puts output
+    end
+
+    puts "Checkout finished in #{checkout_time.to_i}s\n"
 
     exit 1 if status.to_i > 0
 
