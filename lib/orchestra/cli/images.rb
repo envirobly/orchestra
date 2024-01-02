@@ -16,6 +16,8 @@ class Orchestra::Cli::Images < Orchestra::Base
     # Disable output buffering, otherwise exec prevents some of the puts to be visible
     $stdout.sync = true
 
+    puts `docker version`
+
     puts "Checking out commit #{options.commit_id}..."
 
     checkout_time = Benchmark.realtime do
