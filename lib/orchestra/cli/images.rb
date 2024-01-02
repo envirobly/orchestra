@@ -26,7 +26,7 @@ class Orchestra::Cli::Images < Orchestra::Base
         "docker", "buildx", "build",
         "--progress=plain",
         "--cache-from=type=registry,ref=#{cache_registry_uri}",
-        "--cache-to=type=registry,ref=#{cache_registry_uri},mode=max",
+        "--cache-to=type=registry,ref=#{cache_registry_uri},mode=max,image-manifest=true,oci-mediatypes=true",
         "-t", options.image_uri, "--push",
         "-f", dockerfile_path.to_s,
         build_context.to_s
@@ -45,7 +45,10 @@ class Orchestra::Cli::Images < Orchestra::Base
       git_checkout_path.join options.dockerfile
     end
 
+    CACHE_IMAGE_TAG = "cache"
     def cache_registry_uri
-      options.image_uri.split(":").first
+      registry = options.image_uri.split(":").first
+
+      [registry, CACHE_IMAGE_TAG].join ":"
     end
 end
