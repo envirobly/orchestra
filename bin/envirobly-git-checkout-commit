@@ -7,5 +7,5 @@ mkdir -p $1
 cd $1
 git init
 git remote add origin $2
-git fetch --depth 1 origin $3
+git fetch --jobs 2 --porcelain --depth 1 origin $3
 git checkout FETCH_HEAD

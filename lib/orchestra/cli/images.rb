@@ -13,8 +13,6 @@ class Orchestra::Cli::Images < Orchestra::Base
   method_option :build_context,   type: :string, required: true
   def build
     status = 1
-    # Disable output buffering, otherwise exec prevents some of the puts to be visible
-    $stdout.sync = true
 
     puts "Checking out commit #{options.commit_id}..."
 
@@ -26,6 +24,8 @@ class Orchestra::Cli::Images < Orchestra::Base
     end
 
     puts "Checkout finished in #{checkout_time.to_i}s\n"
+
+    $stdout.flush
 
     exit 1 if status.to_i > 0
 
