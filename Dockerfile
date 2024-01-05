@@ -48,7 +48,9 @@ RUN apk add --no-cache --update \
     docker-cli-compose \
     docker-credential-ecr-login \
     aws-cli \
-    git
+    git \
+    nodejs npm && \
+    npm install s3p -g
 
 RUN git config --global credential.helper '!aws codecommit credential-helper $@' && \
     git config --global credential.UseHttpPath true && \
